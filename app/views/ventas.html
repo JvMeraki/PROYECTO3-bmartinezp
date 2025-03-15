@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block title %}Ventas | Heladería{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Gestión de Ventas</h1>
+    
+    <h2 class="mb-3">Registrar Nueva Venta</h2>
+    <form action="{{ url_for('ventas.crear_venta') }}" method="post" class="mb-4">
+        <div class="mb-3">
+            <label class="form-label">Productos:</label>
+            <div id="productos-container">
+                <div class="row mb-2 producto-item">
+                    <div class="col-md-6">
+                        <select name="productos[]" class="form-select" required>
+                            <option value="" disabled selected>Selecciona un producto</option>
+                            {% for producto in productos %}
+                                <option value="{{ producto.id }}">{{ producto.nombre }} - ${{ producto.precio }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" name="cantidades[]" class="form-control" placeholder="Cantidad" min="1" required>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-danger remove-producto">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary mt-2" id="add-producto"
+                    data-productos='{{ productos | tojson | safe }}'>
+                Agregar otro producto
+            </button>
+        </div>
+
+        <button type="submit" class="btn btn-success">Registrar Venta</button>
+    </form>
+
+    <h2 class="mb-3">Ventas Realizadas</h2>
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Productos</th>
+                <th>Total</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for venta in ventas %}
+                <tr>
+                    <td>{{ venta.id }}</td>
+                    <td>
+                        <ul>
+                            {% for detalle in venta.detalles %}
+                                <li>{{ detalle.producto.nombre }} ({{ detalle.cantidad }} unidades)</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>${{ venta.total }}</td>
+                    <td>{{ venta.fecha }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let btnAgregar = document.getElementById("add-producto");
+        let container = document.getElementById("productos-container");
+    
+        if (btnAgregar) {
+            let productos = JSON.parse(btnAgregar.dataset.productos); // Convertir JSON
+    
+            btnAgregar.addEventListener("click", function () {
+                let newProductRow = document.createElement("div");
+                newProductRow.classList.add("row", "mb-2", "producto-item");
+    
+                let selectHTML = '<select name="productos[]" class="form-select" required>';
+                selectHTML += '<option value="" disabled selected>Selecciona un producto</option>';
+                productos.forEach(producto => {
+                    selectHTML += `<option value="${producto.id}">${producto.nombre} - $${producto.precio.toFixed(2)}</option>`;
+                });
+                selectHTML += '</select>';
+    
+                newProductRow.innerHTML = `
+                    <div class="col-md-6">${selectHTML}</div>
+                    <div class="col-md-3">
+                        <input type="number" name="cantidades[]" class="form-control" placeholder="Cantidad" min="1" required>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-danger remove-producto">Eliminar</button>
+                    </div>
+                `;
+    
+                container.appendChild(newProductRow);
+            });
+    
+            document.addEventListener("click", function (event) {
+                if (event.target.classList.contains("remove-producto")) {
+                    event.target.closest(".producto-item").remove();
+                }
+            });
+        }
+    });
+</script>
+
+{% endblock %}

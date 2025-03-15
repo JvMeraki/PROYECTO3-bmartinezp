@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block title %}Productos | Heladería{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-3">Lista de Productos</h2>
+    <a class="btn btn-primary mb-3" href="{{ url_for('productos.nuevo_producto') }}">Agregar Producto</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Costo Producción</th>
+                <th>Calorías</th>
+                <th>Tipo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+            <tr>
+                <td>
+                    {% if producto.tipo == "Copa" %}
+                        <img src="../static/img/ice-cream-cup.png" alt="IceCream Cup" class="img-ico">
+                    {% elif producto.tipo == "Malteada" %}
+                        <img src="../static/img/milk-shake.png" alt="Milkshake" class="img-ico">
+                    {% else %}
+                        <img src="../static/img/ice-cream.png" alt="IceCream Image" class="img-ico">
+                    {% endif %}
+                </td>
+                <td>{{ producto.nombre }}</td>
+                <td>${{ producto.precio_publico }}</td>
+                <td>${{ producto.calcular_costo() }}</td>
+                <td>{{ producto.calcular_calorias() }}</td>
+                <td>{{ producto.tipo }}</td>
+                <td>
+                    <a class="btn btn-warning btn-sm" href="{{ url_for('productos.editar_producto', id=producto.id) }}">Editar</a>
+                    <form action="{{ url_for('productos.eliminar_producto', id=producto.id) }}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este producto?');">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+{% extends 'base.html' %} {% block title %}Inicio | Heladería{% endblock %}
+{%block content %}
+<div class="container text-center mt-5">
+  <h1 class="mb-4">Bienvenido a la Heladería de Javi</h1>
+  <p>
+    Disfruta de nuestros deliciosos helados artesanales elaborados con los
+    mejores ingredientes.
+  </p>
+
+  <div class="mt-4">
+    <a href="{{ url_for('productos.listar_productos') }}" class="btn btn-primary btn-lg">Ver Productos</a>
+  </div>
+  <br>
+  <h1>Productos destacados</h1>
+  <div class="cards">
+    {% for producto in productos %}
+      <div class="card">
+        {% if producto.tipo == "Copa" %}
+          <img src="../static/img/ice-cream-cup.png" alt="IceCream Cup" style="width: 100%;" class="img-card">
+        {% elif producto.tipo == "Malteada" %}
+          <img src="../static/img/milk-shake.png" alt="Milkshake" style="width: 100%;" class="img-card">
+        {% else %}
+          <img src="../static/img/ice-cream.png" alt="IceCream Image" style="width: 100%;" class="img-card">
+        {% endif %}
+        <div class="card-container">
+          <p class="card-title"><b> {{ producto.nombre }} </b></p>
+          <p class="card-price"> ${{ producto.precio_publico }} </p>
+          <p> {{ producto.tipo }} </p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="mt-5">
+    <button id="modo-nocturno-btn" class="btn btn-dark" onclick="toggleModoNocturno()">
+      Modo Nocturno
+    </button>
+  </div>
+</div>
+{% endblock %}

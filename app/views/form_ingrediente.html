@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Agregar Ingrediente</h2>
+    <form action="{{ url_for('ingredientes.nuevo_ingrediente') }}" method="post" class="needs-validation" novalidate>
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre:</label>
+            <input type="text" name="nombre" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="precio" class="form-label">Precio:</label>
+            <input type="number" step="0.01" name="precio" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="calorias" class="form-label">Calorías:</label>
+            <input type="number" name="calorias" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="inventario" class="form-label">Inventario (Kg o Litros):</label>
+            <input type="number" step="0.01" name="inventario" class="form-control" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="es_vegetariano" class="form-label">¿Es vegetariano?</label>
+            <select name="es_vegetariano" class="form-control">
+                <option value="1">Sí</option>
+                <option value="0">No</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="tipo_ingrediente_id" class="form-label">Tipo de Ingrediente</label>
+            <select id="tipo_ingrediente_id" name="tipo_ingrediente_id" class="form-select" required>
+                <option value="" disabled selected>Seleccione un tipo</option>
+                {% for tipo in tipos_ingrediente %}
+                    <option value="{{ tipo.id }}">{% if ingrediente and ingrediente.tipo_ingrediente_id == tipo.id %}selected="selected"{% endif %}
+                        {{ tipo.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+            <div class="invalid-feedback">Seleccione un tipo de ingrediente.</div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="{{ url_for('ingredientes.listar_ingredientes') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+<script>
+    (function () {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+{% endblock %}

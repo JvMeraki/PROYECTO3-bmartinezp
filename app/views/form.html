@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{% if producto %}Editar Producto{% else %}Agregar Producto{% endif %}</h2>
+    <form action="{% if producto %}{{ url_for('productos.editar_producto', id=producto.id) }}{% else %}{{ url_for('productos.nuevo_producto') }}{% endif %}" method="POST" class="needs-validation" novalidate>
+        
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" id="nombre" name="nombre" class="form-control" value="{{ producto.nombre if producto else '' }}" required>
+            <div class="invalid-feedback">Por favor, ingrese un nombre.</div>
+        </div>
+        
+        <div class="mb-3">
+            <label for="precio_publico" class="form-label">Precio Público</label>
+            <input type="number" step="0.01" id="precio_publico" name="precio_publico" class="form-control" value="{{ producto.precio_publico if producto else '' }}" required>
+            <div class="invalid-feedback">Ingrese un precio válido.</div>
+        </div>
+        
+        <div class="mb-3">
+            <label for="tipo" class="form-label">Tipo</label>
+            <select id="tipo" name="tipo" class="form-select" required>
+                <option value="Copa" >{% if producto and producto.tipo == 'Copa' %}selected{% endif %}Copa</option>
+                <option value="Malteada" >{% if producto and producto.tipo == 'Malteada' %}selected{% endif %}Malteada</option>
+            </select>
+            <div class="invalid-feedback">Seleccione un tipo de producto.</div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Costo de Producción</label>
+            <p id="costo_produccion" class="form-control">0</p>
+            <input type="hidden" id="costo_produccion_input" name="costo_produccion">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Selecciona hasta 3 ingredientes:</label>
+            <div id="ingredientes-container">
+                {% for ingrediente in ingredientes %}
+                    <div class="form-check">
+                        <input class="form-check-input ingrediente-checkbox" 
+                               type="checkbox" 
+                               id="ingrediente_{{ ingrediente.id }}" 
+                               name="ingredientes" 
+                               value="{{ ingrediente.id }}"
+                               data-costo="{{ ingrediente.precio }}"
+                               {% if producto and ingrediente.id in producto.ingredientes_ids %}checked{% endif %}>
+                        <label class="form-check-label" for="ingrediente_{{ ingrediente.id }}">
+                            {{ ingrediente.nombre }}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="invalid-feedback">Debe seleccionar entre 1 y 3 ingredientes.</div>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="{{ url_for('productos.listar_productos') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let checkboxes = document.querySelectorAll(".ingrediente-checkbox");
+        let tipoProducto = document.getElementById("tipo");
+        let costoProduccion = document.getElementById("costo_produccion");
+        let costoProduccionInput = document.getElementById("costo_produccion_input");
+
+        function actualizarCosto() {
+            let selected = document.querySelectorAll(".ingrediente-checkbox:checked");
+            let totalCosto = 0;
+            
+            selected.forEach(checkbox => {
+                let costo = parseFloat(checkbox.getAttribute("data-costo"));
+                totalCosto += costo;
+            });
+
+            if (tipoProducto.value === "Malteada") {
+                totalCosto += 500;
+            }
+
+            costoProduccion.textContent = totalCosto.toFixed(2) + " pesos";
+            costoProduccionInput.value = totalCosto.toFixed(2);
+        }
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener("change", function () {
+                let selected = document.querySelectorAll(".ingrediente-checkbox:checked");
+                if (selected.length > 3) {
+                    this.checked = false;
+                    alert("Solo puedes seleccionar hasta 3 ingredientes.");
+                }
+                actualizarCosto();
+            });
+        });
+
+        tipoProducto.addEventListener("change", function () {
+            actualizarCosto();
+        });
+
+        actualizarCosto();
+    });
+</script>
+{% endblock %}

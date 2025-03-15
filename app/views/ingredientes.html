@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Lista de Ingredientes</h2>
+    <a href="{{ url_for('ingredientes.nuevo_ingrediente') }}" class="btn btn-success mb-3">Agregar Ingrediente</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Calorías</th>
+                <th>Inventario (kg o lt)</th>
+                <th>¿Es vegetariano?</th>
+                <th>Tipo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ingrediente in ingredientes %}
+                <tr>
+                    <td>{{ ingrediente.id }}</td>
+                    <td>{{ ingrediente.nombre }}</td>
+                    <td>{{ ingrediente.precio }}</td>
+                    <td>{{ ingrediente.calorias }}</td>
+                    <td>{{ ingrediente.inventario }}</td>
+                    <td>
+                        <span class="badge {% if ingrediente.es_vegetariano %}bg-success{% else %}bg-danger{% endif %}">
+                            {% if ingrediente.es_vegetariano %}Sí{% else %}No{% endif %}
+                        </span>
+                    </td>
+                    <td>{{ ingrediente.tipo_ingrediente.nombre }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
