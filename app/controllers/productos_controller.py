@@ -22,6 +22,17 @@ def nuevo_producto():
         tipo = request.form["tipo"]
         ingredientes_seleccionados = request.form.getlist("ingredientes")
 
+        # Validar si los campos están vacíos
+        if not nombre or not precio_publico:
+            flash("Todos los campos son obligatorios.", "danger")
+            return redirect(url_for("/form.html"))
+
+        try:
+            precio_publico = float(precio_publico)
+        except ValueError:
+            flash("El precio debe ser un número válido.", "danger")
+            return redirect(url_for("/form.html"))
+        
         if len(ingredientes_seleccionados) != 3:
             flash("Debes seleccionar exactamente 3 ingredientes", "danger")
             return render_template("/form.html", ingredientes=ingredientes)

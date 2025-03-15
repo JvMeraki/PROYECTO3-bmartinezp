@@ -33,7 +33,7 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Selecciona hasta 3 ingredientes:</label>
+            <label class="form-label">Selecciona 3 ingredientes:</label>
             <div id="ingredientes-container">
                 {% for ingrediente in ingredientes %}
                     <div class="form-check">
@@ -58,6 +58,7 @@
 </div>
 
 <script>
+    
     document.addEventListener("DOMContentLoaded", function () {
         let checkboxes = document.querySelectorAll(".ingrediente-checkbox");
         let tipoProducto = document.getElementById("tipo");
@@ -94,6 +95,28 @@
 
         tipoProducto.addEventListener("change", function () {
             actualizarCosto();
+        });
+
+        (function () {
+            'use strict';
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+
+        form.addEventListener("submit", function (event) {
+            let selected = document.querySelectorAll(".ingrediente-checkbox:checked");
+            if (selected.length !== 3) {
+                event.preventDefault(); // Evita que el formulario se envíe
+                alert("Debes seleccionar exactamente 3 ingredientes.");
+            }
         });
 
         actualizarCosto();
