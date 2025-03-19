@@ -14,6 +14,9 @@
             <a href="/" class="navbar-brand">
                 <img src="{{ url_for('static', filename='img/ice-cream.png') }}" alt="Heladería" class="navbar-logo">
                 <span class="navbar-title">Heladería de Javi</span>
+                {%if current_user.is_authenticated %}
+                <span>: - Hola, {{current_user.username}}</span>
+                {% endif %}
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -32,6 +35,18 @@
                     <li class="nav-item">
                         <a class="nav-link {% if request.path.startswith('/ventas') %}active{% endif %}" href="/ventas">Ventas</a>
                     </li>
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path.startswith('/auth.logout') %}active{% endif %}" href="{{ url_for('auth.logout') }}">Sign Out</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path.startswith('/auth/login') %}active{% endif %}" href="/auth/login">Sign In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path.startswith('/auth/register') %}active{% endif %}" href="/auth/register">Sign Up</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

@@ -1,20 +1,26 @@
 from flask import Flask
+from flask_login import LoginManager
 
 from app.config.config import Config
 from app.config.db import db
 from app.config.routes import register_routes
+from app.controllers.auth import auth_bp
 from app.controllers.ingredientes_controller import ingredientes_bp
 from app.controllers.productos_controller import productos_bp
 from app.controllers.ventas_controller import ventas_bp
 
+login_manager = LoginManager()
+login_manager.login_view = "auth.login"
 
 def create_app(config_app=Config):
     app = Flask(__name__, template_folder="views", static_folder="static")
     
     app.config.from_object(config_app)
     db.init_app(app)
+    login_manager.init_app(app)
     register_routes(app)  # Registra rutas generales
 
+    app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(productos_bp, url_prefix="/productos") 
     app.register_blueprint(ventas_bp)
     app.register_blueprint(ingredientes_bp, url_prefix="/ingredientes")
@@ -46,3 +52,8 @@ def create_app(config_app=Config):
         print("Tipos de ingredientes insertados correctamente.")
     
     return app
+
+@login_manager.user_loader
+def load_user(user_id):
+    from app.models.user import User
+    return User.query.get(int(user_id))
