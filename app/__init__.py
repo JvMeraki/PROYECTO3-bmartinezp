@@ -13,7 +13,12 @@ login_manager = LoginManager()
 login_manager.login_view = "auth.login"
 
 def create_app(config_app=Config):
+    
+    
     app = Flask(__name__, template_folder="views", static_folder="static")
+    @app.route("/prueba")
+    def prueba():
+        return "prueba"
     
     app.config.from_object(config_app)
     db.init_app(app)
