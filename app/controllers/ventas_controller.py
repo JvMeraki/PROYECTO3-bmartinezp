@@ -2,6 +2,7 @@ from datetime import datetime
 
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
+from app.config.auth_decorator import role_required
 from app.config.db import db
 from app.models.base import Base
 from app.models.detalle_venta import DetalleVenta
@@ -11,6 +12,7 @@ from app.models.venta import Venta
 ventas_bp = Blueprint('ventas', __name__, url_prefix='/ventas')
 
 @ventas_bp.route('/')
+@role_required("is_admin", "is_employee", "is_client")
 def ventas():
     ventas = Venta.query.all()
     productos = Producto.query.all()
@@ -27,6 +29,7 @@ def ventas():
     return render_template('ventas.html', ventas=ventas, productos=productos_serializables)
 
 @ventas_bp.route('/crear', methods=['POST'])
+@role_required("is_admin", "is_employee", "is_client")
 def crear_venta():
     producto_ids = request.form.getlist("productos[]")  # Lista de IDs de productos
     cantidades = request.form.getlist("cantidades[]")  # Lista de cantidades

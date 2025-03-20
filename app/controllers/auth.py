@@ -45,7 +45,7 @@ def register():
         hashed_password = generate_password_hash(password, method="pbkdf2:sha256")
         secret_key = os.urandom(24).hex()
 
-        new_user = User(username=username, password=hashed_password, secret_key=secret_key, is_admin=False)
+        new_user = User(username=username, password=hashed_password, secret_key=secret_key, is_admin=False, is_employee=False)
         new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()

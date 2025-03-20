@@ -1,5 +1,6 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
+from app.config.auth_decorator import role_required
 from app.config.db import db
 from app.models.copa import Copa
 from app.models.ingrediente import Ingrediente, TipoIngrediente
@@ -13,6 +14,7 @@ def listar_ingredientes():
     return render_template("/ingredientes.html", ingredientes=ingredientes)
 
 @ingredientes_bp.route("/nuevo", methods=["GET", "POST"])
+@role_required("is_admin", "is_employee")
 def nuevo_ingrediente():
     tipos_ingrediente = TipoIngrediente.query.all()
     if request.method == 'POST':
