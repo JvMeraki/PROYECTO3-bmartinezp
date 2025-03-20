@@ -45,6 +45,28 @@ h1 {
     transition: color 0.5s ease;
 }
 
+.ruta {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+label {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+select, button {
+    font-size: 16px;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+select {
+    background-color: white;
+}
+
 body.noche h1 {
     color: var(--color-peach-orange);
 }

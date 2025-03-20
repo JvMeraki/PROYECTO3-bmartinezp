@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Consulta la información de los productos</h1>
+    <p>
+        Puedes consultar los productos con este mini formulario, o navegando la ruta <a class="ruta" href = "/productos_json">/productos_json</a> o <a class="ruta" href="/producto/1">/producto/ID</a>
+    </p>
+    <p>para consultar el ID puedes apoyarte del formulario</p>
+    <label for="producto">Selecciona un producto:</label>
+    <select id="producto">
+        {% for producto in productos %}
+            <option value="{{ producto.id }}">{{ producto.nombre }}</option>
+        {% endfor %}
+    </select>
+    
+    <button onclick="consultarProducto()">Consultar</button>
+
+    <p id="resultado"></p>
+
+    <pre id="jsonResultado" class="language-json"></pre>
+</div>
+
+<script>
+    function consultarProducto() {
+        let productoSeleccionado = document.getElementById("producto").value;
+    
+        fetch(`/producto/${productoSeleccionado}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Producto no encontrado");
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.id) {
+                    document.getElementById("resultado").innerText = 
+                        `Nombre: ${data.nombre}, Precio: ${data.precio}, Tipo: ${data.tipo}`;
+    
+                    // Mostrar JSON con colores usando Prism.js
+                    let jsonPretty = JSON.stringify(data, null, 2);
+                    let jsonElement = document.getElementById("jsonResultado");
+                    
+                    jsonElement.textContent = jsonPretty;
+                    jsonElement.classList.add("language-json");
+                    
+                    Prism.highlightElement(jsonElement);
+                } else {
+                    document.getElementById("resultado").innerText = "No se encontró el producto.";
+                    document.getElementById("jsonResultado").textContent = "";
+                }
+            })
+            .catch(error => {
+                console.error("Error al consultar el producto:", error);
+                document.getElementById("resultado").innerText = "Error al obtener los datos.";
+                document.getElementById("jsonResultado").textContent = "";
+            });
+    }
+</script>
+{% endblock %}

@@ -11,6 +11,14 @@ class Producto(db.Model):
     heladeria_id = db.Column(db.Integer, db.ForeignKey('heladeria.id'), nullable=True)
     ingredientes = db.relationship('ProductoIngrediente', back_populates='producto')
     
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "precio": self.precio_publico,
+            "tipo": self.tipo,
+            "ingredientes": [pi.to_dict() for pi in self.ingredientes] 
+        }
     
     def obtener_ingredientes(self):
         return [pi.ingrediente for pi in self.ingredientes]

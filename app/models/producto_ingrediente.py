@@ -10,3 +10,14 @@ class ProductoIngrediente(db.Model):
 
     producto = db.relationship('Producto', back_populates='ingredientes')
     ingrediente = db.relationship('Ingrediente', back_populates='productos')
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "ingrediente": {
+                "id": self.ingrediente.id,
+                "nombre": self.ingrediente.nombre,
+                "precio": self.ingrediente.precio,
+                "calorias": self.ingrediente.calorias
+            }
+        }

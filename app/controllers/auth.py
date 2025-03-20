@@ -2,6 +2,7 @@ import os
 
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import login_required, login_user, logout_user
+from sqlalchemy import func
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.config.db import db
@@ -12,10 +13,10 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form.get('username')
+        username = request.form.get('username').strip().lower()
         password = request.form.get('password')
         
-        user = User.query.filter_by(username=username).first()
+        user = User.query.filter(func.lower(User.username) == username).first()
         if user and user.check_password(password):
             login_user(user)
             flash("Inicio de sesión exitoso", "success")
