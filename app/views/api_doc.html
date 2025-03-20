@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Documentación de la API de la Heladería</h1>
+    <p>Esta API permite gestionar productos e ingredientes de la heladería.</p>
+
+    <h2>Endpoints disponibles</h2>
+    <h3>Productos</h3>
+    <ul>
+        <li><strong>Consultar todos los productos:</strong> <code>GET /productos_json</code></li>
+        <li><strong>Consultar un producto por ID:</strong> <code>GET /producto/&lt;id&gt;</code></li>
+        <li><strong>Consultar un producto por nombre:</strong> <code>GET /producto/nombre/&lt;nombre&gt;</code></li>
+        <li><strong>Consultar calorías de un producto:</strong> <code>GET /producto/&lt;id&gt;/calorias</code></li>
+        <li><strong>Consultar rentabilidad de un producto:</strong> <code>GET /producto/&lt;id&gt;/rentabilidad</code></li>
+        <li><strong>Consultar costo de producción de un producto:</strong> <code>GET /producto/&lt;id&gt;/costo</code></li>
+        <li><strong>Vender un producto:</strong> <code>POST /producto/&lt;id&gt;/vender</code></li>
+        <li><strong>Reabastecer un producto:</strong> <code>POST /producto/&lt;id&gt;/reabastecer</code></li>
+        <li><strong>Renovar inventario de un producto:</strong> <code>POST /producto/&lt;id&gt;/renovar</code></li>
+    </ul>
+    
+    <h3>Ingredientes</h3>
+    <ul>
+        <li><strong>Consultar todos los ingredientes:</strong> <code>GET /ingredientes_json</code></li>
+        <li><strong>Consultar un ingrediente por ID:</strong> <code>GET /ingrediente/&lt;id&gt;</code></li>
+        <li><strong>Consultar un ingrediente por nombre:</strong> <code>GET /ingrediente/nombre/&lt;nombre&gt;</code></li>
+        <li><strong>Verificar si un ingrediente es saludable:</strong> <code>GET /ingrediente/&lt;id&gt;/saludable</code></li>
+    </ul>
+</div>
+{% endblock %}

@@ -3,11 +3,7 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1>Consulta la información de los productos</h1>
-    <p>
-        Puedes consultar los productos con este mini formulario, o navegando la ruta <a class="ruta" href = "/productos_json">/productos_json</a> o <a class="ruta" href="/producto/1">/producto/ID</a>
-    </p>
-    <p>para consultar el ID puedes apoyarte del formulario</p>
+    <h1>Consulta la información de los productos existentes</h1>
     <label for="producto">Selecciona un producto:</label>
     <select id="producto">
         {% for producto in productos %}

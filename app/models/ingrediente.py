@@ -30,6 +30,17 @@ class Ingrediente(db.Model):
     tipo_ingrediente = db.relationship('TipoIngrediente', back_populates='ingredientes')
 
     productos = db.relationship('ProductoIngrediente', back_populates='ingrediente', cascade="all, delete")
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "precio": self.precio,
+            "calorias": self.calorias,
+            "inventario": self.inventario,
+            "es_vegetariano": self.es_vegetariano
+        }
+
 
     def __repr__(self):
         return f"<Ingrediente {self.nombre}, {self.tipo_ingrediente.nombre}>"
