@@ -18,7 +18,7 @@ def role_required(*roles):
 
                 if not any(getattr(current_user, role, False) for role in roles):
                     flash("No autorizado", "danger")
-                    return redirect(url_for('api.no_autorizado'))
+                    return redirect(url_for('no_autorizado'))
                     
                 return func(*args, **kwargs)
             return wrapper

@@ -62,12 +62,17 @@ def editar_producto(id):
     producto = Producto.query.get_or_404(id)
     
     if request.method == "POST":
-        producto.nombre = request.form["nombre"]
-        producto.precio_publico = request.form["precio_publico"]
+        producto.nombre = request.form.get("nombre")
+        producto.precio_publico = request.form.get("precio_publico")
+
+        if not producto.nombre or not producto.precio_publico:
+            flash("Todos los campos son obligatorios.", "danger")
+            return redirect(url_for("productos.editar_producto", id=id))
+
         db.session.commit()
         flash("Producto actualizado con éxito", "success")
         return redirect(url_for("productos.listar_productos"))
-    
+
     return render_template("/form.html", producto=producto, ingredientes=Ingrediente.query.all())
 
 @productos_bp.route("/eliminar/<int:id>", methods=["POST"])

@@ -47,13 +47,6 @@ def register_routes(app):
         if producto:
             return jsonify(producto.to_dict())
         return jsonify({"error": "Producto no encontrado"}), 404
-    
-    @app.route('/productos/editar/<int:producto_id>', methods=['GET', 'POST'])
-    @role_required("is_admin", "is_employee")
-    def editar_producto(producto_id):
-        producto = Producto.query.get(producto_id)
-        if not producto:
-            return jsonify({"error": "Producto no encontrado"}), 404
 
     @app.route('/producto/nombre/<string:nombre>', methods=['GET'])
     def obtener_producto_por_nombre(nombre):
